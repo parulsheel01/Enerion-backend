@@ -2,6 +2,7 @@ package com.enerionenergy.enerion_backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,14 +10,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.context.annotation.Configuration;
+
 import com.enerionenergy.enerion_backend.service.UserDetailsServiceImplementation;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfiguration {
     @Autowired
-    private UserDetailsServiceImplementation userDetailsService;
+    private UserDetailsServiceImplementation userDetailsServiceImpl;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -39,7 +39,7 @@ public class SecurityConfiguration {
     }
     
     public void configure(AuthenticationManagerBuilder config) throws Exception{
-        config.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        config.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -47,3 +47,4 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 }
+///
