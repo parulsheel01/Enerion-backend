@@ -1,5 +1,8 @@
 package com.enerionenergy.enerion_backend.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +26,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private List<String> roles = new ArrayList<>();
+
     public User() {
     }
 
@@ -42,6 +47,13 @@ public class User {
         return password;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+    
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
     public void setId(Long id) {
         this.userId = id;
     }

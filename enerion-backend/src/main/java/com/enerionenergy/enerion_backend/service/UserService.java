@@ -14,12 +14,12 @@ import com.enerionenergy.enerion_backend.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    public  PasswordEncoder passwordEncoder;
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public void saveNewUser(User user){
+    public void registerUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));   // username : testuser,  password : abc123
         user.setRoles(Arrays.asList("USER"));
         userRepository.save(user);
@@ -35,10 +35,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // Create a user
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
 
     // Delete a user
     public void deleteUser(Long id) {
