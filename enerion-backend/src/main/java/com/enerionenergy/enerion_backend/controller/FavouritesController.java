@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enerionenergy.enerion_backend.dto.FavouritesDTO;
 import com.enerionenergy.enerion_backend.entity.Bike;
 import com.enerionenergy.enerion_backend.entity.Favourites;
 import com.enerionenergy.enerion_backend.entity.User;
@@ -20,15 +22,13 @@ import com.enerionenergy.enerion_backend.service.FavouritesService;
 import com.enerionenergy.enerion_backend.service.UserService;
 @RestController
 @RequestMapping("/api/favourites")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class FavouritesController {
-    private final BikeController bikeController;
     private final FavouritesService favouriteService;
     private final UserService userService;
 
-    public FavouritesController(FavouritesService favouriteService, BikeController bikeController, UserService userService) {
+    public FavouritesController(FavouritesService favouriteService, UserService userService) {
         this.favouriteService = favouriteService;
-        this.bikeController = bikeController;
         this.userService = userService;
     }
 
@@ -38,27 +38,19 @@ public class FavouritesController {
     public ResponseEntity<List<Bike>> getUserFavourites(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); 
         String userEmail = authentication.getName();
-        //System.out.println("Authenticated user: " + userEmail);
         User user = userService.findByEmail(userEmail);
-       //System.out.println("User from DB: " + user);
-        if(!user.getId().equals(userId)) {
-            return ResponseEntity.status(403).build(); // Forbidden
-        }
-        List<Bike> favourites = favouriteService.getUserFavourites(userId);
+        List<Bike> favourites = favouriteService.getUserFavourites(user.getId());
         return ResponseEntity.ok(favourites);
     }
 
     // Add a bike to favourites
     // POST /api/favourites/user/1/bike/5
-    @PostMapping("/{userId}/{bikeId}")
-    public ResponseEntity<Favourites> addFavourite(@PathVariable Long userId, @PathVariable Long bikeId) {
+    @PostMapping
+    public ResponseEntity<Favourites> addFavourite(@RequestBody FavouritesDTO request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         User user = userService.findByEmail(userEmail);
-        if(!user.getId().equals(userId)) {
-            return ResponseEntity.status(403).build(); // Forbidden
-        }
-        return ResponseEntity.ok(favouriteService.addFavourite(userId, bikeId));
+        return ResponseEntity.ok(favouriteService.addFavourite(user.getId(), request.getBikeId()));
     }
 
     // Remove a bike from favourites
@@ -68,10 +60,7 @@ public class FavouritesController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         User user = userService.findByEmail(userEmail);
-        if(!user.getId().equals(userId)) {
-            return ResponseEntity.status(403).build(); // Forbidden
-        }
-        favouriteService.removeFavourite(userId, bikeId);
+        favouriteService.removeFavourite(user.getId(), bikeId);
         return ResponseEntity.noContent().build();
     }
 }

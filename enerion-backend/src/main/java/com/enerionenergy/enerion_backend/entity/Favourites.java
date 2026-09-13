@@ -15,7 +15,6 @@ import jakarta.persistence.UniqueConstraint;
     }
 )
 public class Favourites {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +22,7 @@ public class Favourites {
     private Long userId;
 
     private Long bikeId;
+
     public Favourites() {
     }
 
@@ -31,20 +31,12 @@ public class Favourites {
         this.bikeId = bikeId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public long getUserId() {
         return userId;
     }
 
     public long getBikeId() {
         return bikeId;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setUserId(long userId) {

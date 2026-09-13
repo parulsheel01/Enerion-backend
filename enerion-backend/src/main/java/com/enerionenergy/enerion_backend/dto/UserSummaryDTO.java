@@ -1,4 +1,4 @@
-package com.enerionenergy.enerion_backend.entity;
+package com.enerionenergy.enerion_backend.dto;
 
 public class UserSummaryDTO {
     

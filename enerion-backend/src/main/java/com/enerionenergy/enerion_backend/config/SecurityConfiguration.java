@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +27,8 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/signup").permitAll()
                 .requestMatchers("/api/users/login").permitAll()
+
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/bikes/admin/**").hasRole("ADMIN")
                 
                 // GET all users → ADMIN ONLY
@@ -37,10 +40,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/bikes/**").permitAll()
                 .anyRequest().permitAll()
             )
-            .httpBasic(Customizer.withDefaults());
-        http
+            .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> 
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         )
         .csrf(csrf -> csrf.disable());
         return http.build();
@@ -48,6 +50,12 @@ public class SecurityConfiguration {
     
     public void configure(AuthenticationManagerBuilder config) throws Exception{
         config.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public org.springframework.security.authentication.AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
