@@ -24,4 +24,14 @@ public class BikeService {
         return bikeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bike not found"));
     }
+    
+    public Bike saveBike(Bike bike) {
+        return bikeRepository.save(bike);
+    }
+    public void deleteBikeById(Long id) {
+        if (!bikeRepository.existsById(id)) {
+            throw new RuntimeException("Bike not found");
+        }
+        bikeRepository.deleteById(id);
+    }
 }

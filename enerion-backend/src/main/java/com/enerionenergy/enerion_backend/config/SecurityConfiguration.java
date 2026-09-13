@@ -3,6 +3,7 @@ package com.enerionenergy.enerion_backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +24,17 @@ public class SecurityConfiguration {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/user/signup").permitAll()
-                .requestMatchers("/user/login").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/favourites/**","/user/**").authenticated()
+                .requestMatchers("/api/users/signup").permitAll()
+                .requestMatchers("/api/users/login").permitAll()
+                .requestMatchers("/api/bikes/admin/**").hasRole("ADMIN")
+                
+                // GET all users → ADMIN ONLY
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                // Individual user → authentication required
+                .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+
+                .requestMatchers("/api/favourites/**","/api/users/**").authenticated()
+                .requestMatchers("/api/bikes/**").permitAll()
                 .anyRequest().permitAll()
             )
             .httpBasic(Customizer.withDefaults());
@@ -47,4 +55,3 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 }
-/// main_parul 

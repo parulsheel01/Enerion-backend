@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -17,47 +15,43 @@ import jakarta.persistence.UniqueConstraint;
     }
 )
 public class Favourites {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "bike_id", nullable = false)
-    private Bike bike;
-
+    private Long bikeId;
     public Favourites() {
     }
 
-    public Favourites(User user, Bike bike) {
-        this.user = user;
-        this.bike = bike;
+    public Favourites(long userId, long bikeId) {
+        this.userId = userId;
+        this.bikeId = bikeId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public Bike getBike() {
-        return bike;
+    public long getBikeId() {
+        return bikeId;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public void setBike(Bike bike) {
-        this.bike = bike;
+    public void setBikeId(long bikeId) {
+        this.bikeId = bikeId;
     }
 }

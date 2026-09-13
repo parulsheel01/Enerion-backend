@@ -12,13 +12,23 @@ public class Bike {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bikeId;
+    private Long Id;
 
     private String name;
+
+    private String brand;
+
+    private String model;
 
     private String description;
 
     private Double price;
+
+    @Column(name = "battery_price")
+    private Double batteryPrice;
+
+    @Column(name = "bike_range")
+    private String bike_range;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -34,11 +44,19 @@ public class Bike {
     }
 
     public Long getBikeId() {
-        return bikeId;
+        return Id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public String getModel() {
+        return model;
     }
 
     public String getDescription() {
@@ -49,16 +67,32 @@ public class Bike {
         return price;
     }
 
+    public Double getBatteryPrice() {
+        return batteryPrice;
+    }
+
+    public String getBike_range() {
+        return bike_range;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setBikeId(Long bikeId) {
-        this.bikeId = bikeId;
+        this.Id = bikeId;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public void setDescription(String description) {
@@ -67,6 +101,14 @@ public class Bike {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public void setBatteryPrice(Double batteryPrice) {
+        this.batteryPrice = batteryPrice;
+    }
+
+    public void setBike_range(String bike_range) {
+        this.bike_range = bike_range;
     }
 
     public void setImageUrl(String imageUrl) {

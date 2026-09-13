@@ -1,12 +1,12 @@
 package com.enerionenergy.enerion_backend.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.enerionenergy.enerion_backend.entity.Bike;
 import com.enerionenergy.enerion_backend.entity.Favourites;
-import com.enerionenergy.enerion_backend.entity.User;
 import com.enerionenergy.enerion_backend.repository.BikeRepository;
 import com.enerionenergy.enerion_backend.repository.FavouritesRepository;
 import com.enerionenergy.enerion_backend.repository.UserRepository;
@@ -27,34 +27,33 @@ public class FavouritesService {
     }
 
     // Get all favourites belonging to a user
-    public List<Favourites> getUserFavourites(Long userId) {
+    public List<Bike> getUserFavourites(Long userId) {
 
         if (!userRepository.existsById(userId)) {
             throw new RuntimeException("User not found");
         }
 
-        return favouriteRepository.findByUserId(userId);
+        List<Favourites> favourites = favouriteRepository.findByUserId(userId);
+
+        List<Bike> bikes =  favourites.stream().map(fav -> bikeRepository.findById(fav.getBikeId()).orElse(null)).collect(Collectors.toList());
+        return bikes;
     }
 
     // Add a bike to user's favourites
     public Favourites addFavourite(Long userId, Long bikeId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            // User user = userRepository.findById(userId)
+            //         .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Bike bike = bikeRepository.findById(bikeId)
-                .orElseThrow(() -> new RuntimeException("Bike not found"));
+            // Bike bike = bikeRepository.findById(bikeId)
+            //         .orElseThrow(() -> new RuntimeException("Bike not found"));
 
         // Prevent duplicate favourites
         if (favouriteRepository.findByUserIdAndBikeId(userId, bikeId).isPresent()) {
             throw new RuntimeException("Bike is already in favourites");
         }
 
-        Favourites favourites = new Favourites();
-
-        favourites.setUser(user);
-        favourites.setBike(bike);
-
+        Favourites favourites = new Favourites(userId, bikeId);
         return favouriteRepository.save(favourites);
     }
 
