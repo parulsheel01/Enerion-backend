@@ -34,12 +34,17 @@ public class FavouritesController {
 
     // Get all favourites for a user
     // GET /api/favourites/user/1
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Bike>> getUserFavourites(@PathVariable Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); 
         String userEmail = authentication.getName();
+        //System.out.println("Authenticated user: " + userEmail);
         User user = userService.findByEmail(userEmail);
-        List<Bike> favourites = favouriteService.getUserFavourites(user.getId());
+       //System.out.println("User from DB: " + user);
+        if(!user.getId().equals(userId)) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+        List<Bike> favourites = favouriteService.getUserFavourites(userId);
         return ResponseEntity.ok(favourites);
     }
 
@@ -60,7 +65,12 @@ public class FavouritesController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         User user = userService.findByEmail(userEmail);
-        favouriteService.removeFavourite(user.getId(), bikeId);
+        if(!user.getId().equals(userId)) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+        favouriteService.removeFavourite(userId, bikeId);
         return ResponseEntity.noContent().build();
     }
 }
+
+// done so far

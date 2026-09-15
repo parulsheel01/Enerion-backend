@@ -12,7 +12,8 @@ public class Bike {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    @Column(name = "id")
+    private Long bikeId;
 
     private String name;
 
@@ -44,7 +45,7 @@ public class Bike {
     }
 
     public Long getBikeId() {
-        return Id;
+        return bikeId;
     }
 
     public String getName() {
@@ -80,7 +81,7 @@ public class Bike {
     }
 
     public void setBikeId(Long bikeId) {
-        this.Id = bikeId;
+        this.bikeId = bikeId;
     }
 
     public void setName(String name) {

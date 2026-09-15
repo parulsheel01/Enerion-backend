@@ -23,6 +23,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/signup").permitAll()
@@ -40,6 +41,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/bikes/**").permitAll()
                 .anyRequest().permitAll()
             )
+            //.httpBasic(basic -> basic.disable())
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
